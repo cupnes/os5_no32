@@ -9,9 +9,6 @@ OBJS = init_64.o fb.o font.o fbcon.o kbc.o cpu.o excp.o intr.o sys_64.o
 kernel_64.bin: $(OBJS)
 	ld $(LDFLAGS) -o $@ $+
 
-kernel.bin: $(OBJS)
-	ld $(LDFLAGS) -o $@ $+
-
 %.o: %.S
 	gcc $(CFLAGS) -o $@ $<
 %.o: %.c
