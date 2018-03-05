@@ -83,11 +83,11 @@ struct tss {
 	unsigned short		io_bitmap_base;
 };
 
-extern struct segment_descriptor gdt[GDT_SIZE];
-
 void gdt_init(void);
+#ifdef OS5
 void gdt_set(unsigned int idx, unsigned int base, unsigned int limit,
 	     unsigned char g, unsigned char d, unsigned char l,
 	     unsigned char dpl, unsigned char s, unsigned char type);
+#endif
 
 #endif /* _CPU_H_ */
