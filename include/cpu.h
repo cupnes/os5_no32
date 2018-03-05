@@ -29,11 +29,7 @@ __asm__ volatile ("\tpushf\n"				\
 		  "\tpopq	%0\n":"=r"(_v):);	\
 _v;							\
 })
-#ifndef X86_64
-#define x86_get_flags	x86_get_eflags
-#else
 #define x86_get_flags	x86_get_rflags
-#endif
 #define x86_get_tr()		({			\
 unsigned short _v;					\
 __asm__ volatile ("\tstr	%0\n":"=r"(_v):);	\
@@ -89,9 +85,7 @@ struct tss {
 
 extern struct segment_descriptor gdt[GDT_SIZE];
 
-#ifdef X86_64
 void gdt_init(void);
-#endif
 void gdt_set(unsigned int idx, unsigned int base, unsigned int limit,
 	     unsigned char g, unsigned char d, unsigned char l,
 	     unsigned char dpl, unsigned char s, unsigned char type);

@@ -1,6 +1,4 @@
 #include <cpu.h>
-
-#ifdef X86_64
 #include <asm/cpu.h>
 
 struct segment_descriptor gdt[GDT_SIZE];
@@ -39,7 +37,6 @@ void gdt_init(void)
 		 : [dummy]"=r"(dummy)
 		 : [selector]"m"(selector));
 }
-#endif
 
 void gdt_set(unsigned int idx, unsigned int base, unsigned int limit,
 	     unsigned char g, unsigned char d, unsigned char l,
