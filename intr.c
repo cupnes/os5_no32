@@ -4,8 +4,51 @@
 
 #define MAX_IDT	256
 
-unsigned long long idt[MAX_IDT * 2];
 unsigned long long idtr[2];
+
+#ifndef OS5_INTR
+#define MAX_INTR_NO	256
+#define DESC_TYPE_INTR	14
+
+struct interrupt_descriptor {
+	unsigned short offset_00_15;
+	unsigned short segment_selector;
+	unsigned short ist	: 3;
+	unsigned short _zero1	: 5;
+	unsigned short type	: 4;
+	unsigned short _zero2	: 1;
+	unsigned short dpl	: 2;
+	unsigned short p	: 1;
+	unsigned short offset_31_16;
+	unsigned int   offset_63_32;
+	unsigned int   _reserved;
+};
+struct interrupt_descriptor idt[MAX_INTR_NO];
+
+void default_handler(void);
+
+void set_intr_desc(unsigned char intr_no, void *handler)
+{
+	idt[intr_no].offset_00_15 = (unsigned long long)handler;
+	idt[intr_no].segment_selector = SS_KERNEL_CODE;
+	idt[intr_no].type = DESC_TYPE_INTR;
+	idt[intr_no].p = 1;
+	idt[intr_no].offset_31_16 = (unsigned long long)handler >> 16;
+	idt[intr_no].offset_63_32 = (unsigned long long)handler >> 32;
+}
+
+void intr_init(void)
+{
+	int i;
+	for (i = 0; i < MAX_INTR_NO; i++)
+		set_intr_desc(i, default_handler);
+
+	idtr[0] = ((unsigned long long)idt << 16) | (sizeof(idt) - 1);
+	idtr[1] = ((unsigned long long)idt >> 48);
+	__asm__ ("lidt idtr");
+}
+#else
+unsigned long long idt[MAX_IDT * 2];
 
 void intr_init(void)
 {
@@ -27,6 +70,7 @@ void intr_init(void)
 	idtr[1] = ((unsigned long long)idt >> 48);
 	__asm__ ("lidt idtr");
 }
+#endif
 
 void intr_set_mask_master(unsigned char mask)
 {
@@ -48,6 +92,7 @@ unsigned char intr_get_mask_slave(void)
 	return inb_p(IOADR_SPIC_OCW1);
 }
 
+#ifdef OS5_INTR
 void intr_set_handler(unsigned char intr_num, unsigned long long handler_addr)
 {
 	unsigned int intr_dscr[3];
@@ -64,3 +109,4 @@ void intr_set_handler(unsigned char intr_num, unsigned long long handler_addr)
 	for (i = 0; i < 3; i++)
 		*idt_ptr++ = intr_dscr[i];
 }
+#endif

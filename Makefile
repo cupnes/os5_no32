@@ -1,7 +1,7 @@
 CFLAGS = -Wall -Wextra
 CFLAGS += -nostdinc -nostdlib -fno-builtin -fno-common -c
 CFLAGS += -Iinclude
-CFLAGS += -DX86_64
+CFLAGS += -DOS5_INTR -DOS5
 LDFLAGS = -Map System.map -s -x
 LDFLAGS += -T sys_64.ld
 OBJS = init_64.o fb.o font.o fbcon.o kbc.o cpu.o excp.o intr.o sys_64.o

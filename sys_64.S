@@ -1,5 +1,9 @@
 	.text
 
+	.global default_handler
+default_handler:
+	jmp	default_handler
+
 	.global	keyboard_handler
 keyboard_handler:
 	push	%rax

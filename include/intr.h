@@ -21,6 +21,8 @@ void intr_set_mask_master(unsigned char mask);
 unsigned char intr_get_mask_master(void);
 void intr_set_mask_slave(unsigned char mask);
 unsigned char intr_get_mask_slave(void);
+#ifdef OS5_INTR
 void intr_set_handler(unsigned char intr_num, unsigned long long handler_addr);
+#endif
 
 #endif /* _INTR_H_ */
