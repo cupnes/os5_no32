@@ -17,7 +17,7 @@ int kern_init(struct EFI_SYSTEM_TABLE *st __attribute__ ((unused)),
 	fbcon_init();
 
 	gdt_init();
-#ifndef OS5
+#ifndef OS5_INTR
 	intr_init();
 #else
 	unsigned char i;
