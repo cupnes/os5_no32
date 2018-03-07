@@ -1,6 +1,7 @@
 #include <x86.h>
 #include <excp.h>
 #include <intr.h>
+#include <pic.h>
 #include <fb.h>
 #include <fbcon.h>
 #include <kbc.h>
@@ -18,7 +19,9 @@ void start_kernel(void *_t __attribute__ ((unused)), struct framebuffer *fb)
 	intr_init();
 
 	/* 周辺ICの初期化 */
-	set_intr_desc(INTR_NUM_KB, keyboard_handler);
+	pic_init();
+	kbc_init();
+
 	unsigned char mask = intr_get_mask_master();
 	mask &= ~INTR_MASK_BIT_KB;
 	intr_set_mask_master(mask);

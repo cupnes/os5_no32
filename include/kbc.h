@@ -15,8 +15,8 @@
 #define INTR_MASK_BIT_KB	0x02
 
 extern const char keymap[];
-void keyboard_handler(void);
 
 unsigned char get_keycode_pressed(void);
+void kbc_init(void);
 
 #endif

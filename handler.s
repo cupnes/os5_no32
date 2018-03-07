@@ -4,9 +4,8 @@
 default_handler:
 	jmp	default_handler
 
-	.global	keyboard_handler
-keyboard_handler:
-	/*jmp	keyboard_handler*/
+	.global	kbc_handler
+kbc_handler:
 	push	%rax
 	push	%rcx
 	push	%rdx

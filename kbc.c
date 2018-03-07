@@ -2,6 +2,13 @@
 #include <intr.h>
 #include <kbc.h>
 #include <fbcon.h>
+#include <pic.h>
+
+#define KBC_DATA_ADDR		0x0060
+#define KBC_DATA_BIT_IS_BRAKE	0x80
+#define KBC_STATUS_ADDR		0x0064
+#define KBC_STATUS_BIT_OBF	0x01
+#define KBC_INTR_NO		33
 
 const char keymap[] = {
 	0x00, ASCII_ESC, '1', '2', '3', '4', '5', '6',
@@ -21,6 +28,8 @@ const char keymap[] = {
 	0x00, 0x00, 0x00, '_', 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, '\\', 0x00, 0x00
 };
+
+void kbc_handler(void);
 
 void do_ir_keyboard(void)
 {
@@ -52,4 +61,10 @@ unsigned char get_keycode_pressed(void)
 	unsigned char keycode;
 	while ((keycode = get_keydata_noir()) & IOADR_KBC_DATA_BIT_BRAKE);
 	return keycode & ~IOADR_KBC_DATA_BIT_BRAKE;
+}
+
+void kbc_init(void)
+{
+	set_intr_desc(KBC_INTR_NO, kbc_handler);
+	enable_pic_intr(KBC_INTR_NO);
 }
