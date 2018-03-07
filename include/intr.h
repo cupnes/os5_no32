@@ -17,6 +17,9 @@
 #define INTR_NUM_USER128	0x80
 
 void intr_init(void);
+#ifndef OS5_INTR
+void set_intr_desc(unsigned char intr_no, void *handler);
+#endif
 void intr_set_mask_master(unsigned char mask);
 unsigned char intr_get_mask_master(void);
 void intr_set_mask_slave(unsigned char mask);

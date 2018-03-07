@@ -6,6 +6,7 @@ default_handler:
 
 	.global	keyboard_handler
 keyboard_handler:
+	/*jmp	keyboard_handler*/
 	push	%rax
 	push	%rcx
 	push	%rdx

@@ -19,6 +19,7 @@ int kern_init(struct EFI_SYSTEM_TABLE *st __attribute__ ((unused)),
 	gdt_init();
 #ifndef OS5_INTR
 	intr_init();
+	set_intr_desc(INTR_NUM_KB, keyboard_handler);
 #else
 	unsigned char i;
 	for (i = 0; i < EXCEPTION_MAX; i++)
