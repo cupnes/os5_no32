@@ -1,12 +1,36 @@
 #include <x86.h>
 
-unsigned long long gdtr[2];
-
+/* GDTの定義 */
 const unsigned long long gdt[] = {
 	0x0000000000000000,	/* NULL descriptor */
 	0x00af9a000000ffff,	/* base=0, limit=4GB, mode=code(r-x),kernel */
 	0x00cf93000000ffff	/* base=0, limit=4GB, mode=data(rw-),kernel */
 };
+unsigned long long gdtr[2];
+
+inline void enable_cpu_intr(void)
+{
+	asm volatile ("sti");
+}
+
+inline void cpu_halt(void)
+{
+	asm volatile ("hlt");
+}
+
+inline unsigned char io_read(unsigned short addr)
+{
+	unsigned char value;
+	asm volatile ("inb %[addr], %[value]"
+		      : [value]"=a"(value) : [addr]"d"(addr));
+	return value;
+}
+
+inline void io_write(unsigned short addr, unsigned char value)
+{
+	asm volatile ("outb %[value], %[addr]"
+		      :: [value]"a"(value), [addr]"d"(addr));
+}
 
 void gdt_init(void)
 {

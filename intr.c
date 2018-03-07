@@ -9,19 +9,6 @@ unsigned long long idtr[2];
 #define MAX_INTR_NO	256
 #define DESC_TYPE_INTR	14
 
-struct interrupt_descriptor {
-	unsigned short offset_00_15;
-	unsigned short segment_selector;
-	unsigned short ist	: 3;
-	unsigned short _zero1	: 5;
-	unsigned short type	: 4;
-	unsigned short _zero2	: 1;
-	unsigned short dpl	: 2;
-	unsigned short p	: 1;
-	unsigned short offset_31_16;
-	unsigned int   offset_63_32;
-	unsigned int   _reserved;
-};
 struct interrupt_descriptor idt[MAX_INTR_NO];
 
 void default_handler(void);

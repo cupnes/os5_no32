@@ -24,9 +24,9 @@ void start_kernel(void *_t __attribute__ ((unused)), struct framebuffer *fb)
 	intr_set_mask_master(mask);
 
 	/* CPUの割り込み有効化 */
-	sti();
+	enable_cpu_intr();
 
 	/* haltして待つ */
 	while (1)
-		x86_halt();
+		cpu_halt();
 }
