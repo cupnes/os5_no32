@@ -17,17 +17,9 @@ int kern_init(struct EFI_SYSTEM_TABLE *st __attribute__ ((unused)),
 	fbcon_init();
 
 	gdt_init();
-#ifndef OS5_INTR
 	intr_init();
-	set_intr_desc(INTR_NUM_KB, keyboard_handler);
-#else
-	unsigned char i;
-	for (i = 0; i < EXCEPTION_MAX; i++)
-		intr_set_handler(i, (unsigned long long)&exception_handler);
 
-	intr_set_handler(INTR_NUM_KB, (unsigned long long)&keyboard_handler);
-	intr_init();
-#endif
+	set_intr_desc(INTR_NUM_KB, keyboard_handler);
 	unsigned char mask = intr_get_mask_master();
 	mask &= ~INTR_MASK_BIT_KB;
 	intr_set_mask_master(mask);

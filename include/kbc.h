@@ -15,11 +15,7 @@
 #define INTR_MASK_BIT_KB	0x02
 
 extern const char keymap[];
-#ifdef OS5_INTR
-extern unsigned char keyboard_handler;
-#else
 void keyboard_handler(void);
-#endif
 
 unsigned char get_keycode_pressed(void);
 

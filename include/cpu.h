@@ -84,10 +84,5 @@ struct tss {
 };
 
 void gdt_init(void);
-#ifdef OS5
-void gdt_set(unsigned int idx, unsigned int base, unsigned int limit,
-	     unsigned char g, unsigned char d, unsigned char l,
-	     unsigned char dpl, unsigned char s, unsigned char type);
-#endif
 
 #endif /* _CPU_H_ */

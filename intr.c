@@ -6,7 +6,6 @@
 
 unsigned long long idtr[2];
 
-#ifndef OS5_INTR
 #define MAX_INTR_NO	256
 #define DESC_TYPE_INTR	14
 
@@ -61,30 +60,6 @@ void intr_init(void)
 	outb_p(0x01, IOADR_SPIC_ICW4);
 	outb_p(0xff, IOADR_SPIC_OCW1);
 }
-#else
-unsigned long long idt[MAX_IDT * 2];
-
-void intr_init(void)
-{
-	/* マスタPICの初期化 */
-	outb_p(0x11, IOADR_MPIC_ICW1);
-	outb_p(0x20, IOADR_MPIC_ICW2);
-	outb_p(0x04, IOADR_MPIC_ICW3);
-	outb_p(0x01, IOADR_MPIC_ICW4);
-	outb_p(0xff, IOADR_MPIC_OCW1);
-
-	/* スレーブPICの初期化 */
-	outb_p(0x11, IOADR_SPIC_ICW1);
-	outb_p(0x28, IOADR_SPIC_ICW2);
-	outb_p(0x02, IOADR_SPIC_ICW3);
-	outb_p(0x01, IOADR_SPIC_ICW4);
-	outb_p(0xff, IOADR_SPIC_OCW1);
-
-	idtr[0] = ((unsigned long long)idt << 16) | (MAX_IDT * 16 - 1);
-	idtr[1] = ((unsigned long long)idt >> 48);
-	__asm__ ("lidt idtr");
-}
-#endif
 
 void intr_set_mask_master(unsigned char mask)
 {
@@ -105,22 +80,3 @@ unsigned char intr_get_mask_slave(void)
 {
 	return inb_p(IOADR_SPIC_OCW1);
 }
-
-#ifdef OS5_INTR
-void intr_set_handler(unsigned char intr_num, unsigned long long handler_addr)
-{
-	unsigned int intr_dscr[3];
-	unsigned int *idt_ptr;
-	unsigned char i;
-
-	idt_ptr = (unsigned int *)idt;
-
-	intr_dscr[0] = (SS_KERNEL_CODE << 16) | (handler_addr & 0x0000ffff);
-	intr_dscr[1] = (handler_addr & 0xffff0000) | 0x00008e00;
-	intr_dscr[2] = handler_addr >> 32;
-
-	idt_ptr += intr_num * 4;
-	for (i = 0; i < 3; i++)
-		*idt_ptr++ = intr_dscr[i];
-}
-#endif
