@@ -1,4 +1,4 @@
-#include <cpu.h>
+#include <x86.h>
 #include <asm/cpu.h>
 
 unsigned long long gdtr[2];

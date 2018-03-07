@@ -1,4 +1,4 @@
-#include <cpu.h>
+#include <x86.h>
 #include <excp.h>
 #include <intr.h>
 #include <efi.h>
