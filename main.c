@@ -1,7 +1,6 @@
 #include <x86.h>
 #include <excp.h>
 #include <intr.h>
-#include <efi.h>
 #include <fb.h>
 #include <fbcon.h>
 #include <kbc.h>
