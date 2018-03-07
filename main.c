@@ -15,8 +15,6 @@ int kern_init(struct EFI_SYSTEM_TABLE *st __attribute__ ((unused)),
 	set_bg(0, 70, 250);
 	clear_screen();
 
-	fbcon_init();
-
 	/* CPU周りの初期化 */
 	gdt_init();
 	intr_init();
