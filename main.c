@@ -6,11 +6,10 @@
 #include <fbcon.h>
 #include <kbc.h>
 
-int kern_init(struct EFI_SYSTEM_TABLE *st __attribute__ ((unused)),
-	      struct fb *_fb)
+void start_kernel(void *_t __attribute__ ((unused)), struct framebuffer *fb)
 {
 	/* フレームバッファ周りの初期化 */
-	fb_init(_fb);
+	fb_init(fb);
 	set_fg(255, 255, 255);
 	set_bg(0, 70, 250);
 	clear_screen();
@@ -31,6 +30,4 @@ int kern_init(struct EFI_SYSTEM_TABLE *st __attribute__ ((unused)),
 	/* haltして待つ */
 	while (1)
 		x86_halt();
-
-	return 0;
 }
