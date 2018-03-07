@@ -22,10 +22,6 @@ void start_kernel(void *_t __attribute__ ((unused)), struct framebuffer *fb)
 	pic_init();
 	kbc_init();
 
-	unsigned char mask = intr_get_mask_master();
-	mask &= ~INTR_MASK_BIT_KB;
-	intr_set_mask_master(mask);
-
 	/* CPUの割り込み有効化 */
 	enable_cpu_intr();
 
