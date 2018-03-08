@@ -25,8 +25,3 @@ keyboard_handler:
 	pop	%rcx
 	pop	%rax
 	iretq
-
-	.global	exception_handler
-exception_handler:
-	jmp	exception_handler
-	iretq
