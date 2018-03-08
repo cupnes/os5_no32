@@ -3,7 +3,6 @@
 #include <intr.h>
 #include <efi.h>
 #include <fb.h>
-#include <fbcon.h>
 #include <kbc.h>
 
 int kern_init(struct EFI_SYSTEM_TABLE *st __attribute__ ((unused)),
@@ -13,8 +12,6 @@ int kern_init(struct EFI_SYSTEM_TABLE *st __attribute__ ((unused)),
 	set_fg(255, 255, 255);
 	set_bg(0, 70, 250);
 	clear_screen();
-
-	fbcon_init();
 
 	gdt_init();
 	intr_init();

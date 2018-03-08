@@ -3,12 +3,7 @@
 #include <font.h>
 #include <kbc.h>
 
-unsigned int cursor_x, cursor_y;
-
-void fbcon_init(void)
-{
-	cursor_x = cursor_y = 0;
-}
+unsigned int cursor_x = 0, cursor_y = 0;
 
 void putc(char c)
 {
