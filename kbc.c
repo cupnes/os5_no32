@@ -25,9 +25,9 @@ const char keymap[] = {
 void do_ir_keyboard(void)
 {
 	unsigned char status;
-	status = inb_p(IOADR_KBC_STATUS);
+	status = inb(IOADR_KBC_STATUS);
 	if (status & IOADR_KBC_STATUS_BIT_OBF) {
-		unsigned char keycode = inb_p(IOADR_KBC_DATA);
+		unsigned char keycode = inb(IOADR_KBC_DATA);
 		if (!(keycode & IOADR_KBC_DATA_BIT_BRAKE)) {
 			char c = keymap[keycode];
 			if (('a' <= c) && (c <= 'z'))
@@ -43,8 +43,8 @@ void do_ir_keyboard(void)
 
 unsigned char get_keydata_noir(void)
 {
-	while (!(inb_p(IOADR_KBC_STATUS) & IOADR_KBC_STATUS_BIT_OBF));
-	return inb_p(IOADR_KBC_DATA);
+	while (!(inb(IOADR_KBC_STATUS) & IOADR_KBC_STATUS_BIT_OBF));
+	return inb(IOADR_KBC_DATA);
 }
 
 unsigned char get_keycode_pressed(void)
