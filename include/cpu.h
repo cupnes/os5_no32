@@ -1,8 +1,6 @@
 #ifndef _CPU_H_
 #define _CPU_H_
 
-#include <asm/cpu.h>
-
 #define X86_EFLAGS_IF	0x00000200
 #define GDT_KERN_DS_OFS	0x0010
 
