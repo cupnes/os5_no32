@@ -1,5 +1,4 @@
 #include <cpu.h>
-#include <excp.h>
 #include <intr.h>
 #include <efi.h>
 #include <fb.h>
