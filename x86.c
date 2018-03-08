@@ -17,14 +17,8 @@ void gdt_init(void)
 	asm volatile ("lgdt gdtr");
 
 	/* DS・SSの設定 */
-	/* asm volatile ("movw $2*8, %ax\n" */
-	/* 	      "movw %ax, %ds\n" */
-	/* 	      "movw %ax, %ss\n"); */
 	asm volatile ("movw $2*8, %ax\n"
 		      "movw %ax, %ds\n"
-		      "movw %ax, %es\n"
-		      "movw %ax, %fs\n"
-		      "movw %ax, %gs\n"
 		      "movw %ax, %ss\n");
 
 	/* CSの設定 */
