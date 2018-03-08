@@ -37,8 +37,8 @@ void do_ir_keyboard(void)
 			putc(c);
 		}
 	}
-	outb_p(IOADR_MPIC_OCW2_BIT_MANUAL_EOI | INTR_IR_KB,
-	       IOADR_MPIC_OCW2);
+	outb(IOADR_MPIC_OCW2_BIT_MANUAL_EOI | INTR_IR_KB,
+	     IOADR_MPIC_OCW2);
 }
 
 unsigned char get_keydata_noir(void)
