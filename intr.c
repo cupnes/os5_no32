@@ -31,20 +31,6 @@ void intr_init(void)
 	idtr[0] = ((unsigned long long)idt << 16) | (sizeof(idt) - 1);
 	idtr[1] = ((unsigned long long)idt >> 48);
 	__asm__ ("lidt idtr");
-
-	/* マスタPICの初期化 */
-	io_write(IOADR_MPIC_ICW1, 0x11);
-	io_write(IOADR_MPIC_ICW2, 0x20);
-	io_write(IOADR_MPIC_ICW3, 0x04);
-	io_write(IOADR_MPIC_ICW4, 0x01);
-	io_write(IOADR_MPIC_OCW1, 0xff);
-
-	/* スレーブPICの初期化 */
-	io_write(IOADR_SPIC_ICW1, 0x11);
-	io_write(IOADR_SPIC_ICW2, 0x28);
-	io_write(IOADR_SPIC_ICW3, 0x02);
-	io_write(IOADR_SPIC_ICW4, 0x01);
-	io_write(IOADR_SPIC_OCW1, 0xff);
 }
 
 void intr_set_mask_master(unsigned char mask)
