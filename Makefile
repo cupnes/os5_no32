@@ -1,19 +1,20 @@
-CFLAGS = -Wall -Wextra
-CFLAGS += -nostdinc -nostdlib -fno-builtin -fno-common -c
-CFLAGS += -Iinclude
-LDFLAGS = -Map System.map -s -x
-LDFLAGS += -T kernel.ld
-OBJS = main.o fb.o font.o fbcon.o kbc.o x86.o intr.o pic.o handler.o
+TARGET = kernel.bin
+CFLAGS = -Wall -Wextra -nostdinc -nostdlib -fno-builtin -Iinclude
+LDFLAGS = -Map kernel.map -s -x -T kernel.ld
 
-kernel_64.bin: $(OBJS)
+$(TARGET): main.o fbcon.o fb.o font.o kbc.o x86.o intr.o pic.o handler.o
 	ld $(LDFLAGS) -o $@ $+
 
-%.o: %.s
-	gcc $(CFLAGS) -o $@ $<
 %.o: %.c
-	gcc $(CFLAGS) -o $@ $<
+	gcc $(CFLAGS) -c -o $@ $<
+%.o: %.s
+	gcc $(CFLAGS) -c -o $@ $<
+
+run: $(TARGET)
+	cp $(TARGET) ../fs/
+	qemu-system-x86_64 -bios OVMF.fd -hda fat:../fs
 
 clean:
-	rm -f *~ *.o *.bin *.dat *.img *.map
+	rm -f *~ *.o *.map $(TARGET) include/*~
 
-.PHONY: clean
+.PHONY: run clean
