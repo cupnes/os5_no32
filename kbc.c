@@ -1,7 +1,14 @@
-#include <x86.h>
-#include <intr.h>
 #include <kbc.h>
+#include <x86.h>
 #include <fbcon.h>
+#include <intr.h>
+#include <pic.h>
+
+#define KBC_DATA_ADDR		0x0060
+#define KBC_DATA_BIT_IS_BRAKE	0x80
+#define KBC_STATUS_ADDR		0x0064
+#define KBC_STATUS_BIT_OBF	0x01
+#define KBC_INTR_NO		33
 
 const char keymap[] = {
 	0x00, ASCII_ESC, '1', '2', '3', '4', '5', '6',
@@ -22,33 +29,59 @@ const char keymap[] = {
 	0x00, 0x00, 0x00, 0x00, 0x00, '\\', 0x00, 0x00
 };
 
-void do_ir_keyboard(void)
+void kbc_handler(void);
+
+unsigned char get_kbc_data(void)
 {
-	unsigned char status;
-	status = io_read(IOADR_KBC_STATUS);
-	if (status & IOADR_KBC_STATUS_BIT_OBF) {
-		unsigned char keycode = io_read(IOADR_KBC_DATA);
-		if (!(keycode & IOADR_KBC_DATA_BIT_BRAKE)) {
-			char c = keymap[keycode];
-			if (('a' <= c) && (c <= 'z'))
-				c = c - 'a' + 'A';
-			else if (c == '\n')
-				putc('\r');
-			putc(c);
-		}
-	}
-	io_write(IOADR_MPIC_OCW2, IOADR_MPIC_OCW2_BIT_MANUAL_EOI | INTR_IR_KB);
+	/* ステータスレジスタのOBFがセットされるまで待つ */
+	while (!(io_read(KBC_STATUS_ADDR) & KBC_STATUS_BIT_OBF));
+
+	return io_read(KBC_DATA_ADDR);
 }
 
-unsigned char get_keydata_noir(void)
-{
-	while (!(io_read(IOADR_KBC_STATUS) & IOADR_KBC_STATUS_BIT_OBF));
-	return io_read(IOADR_KBC_DATA);
-}
-
-unsigned char get_keycode_pressed(void)
+unsigned char get_keycode(void)
 {
 	unsigned char keycode;
-	while ((keycode = get_keydata_noir()) & IOADR_KBC_DATA_BIT_BRAKE);
-	return keycode & ~IOADR_KBC_DATA_BIT_BRAKE;
+
+	/* make状態(brakeビットがセットされていない状態)まで待つ */
+	while ((keycode = get_kbc_data()) & KBC_DATA_BIT_IS_BRAKE);
+
+	return keycode;
+}
+
+char getc(void)
+{
+	return keymap[get_keycode()];
+}
+
+void do_kbc_interrupt(void)
+{
+	putc('!');
+
+	/* /\* ステータスレジスタのOBFがセットされていなければreturn *\/ */
+	/* if (!(io_read(KBC_STATUS_ADDR) & KBC_STATUS_BIT_OBF)) */
+	/* 	return; */
+
+	/* /\* make状態でなければreturn *\/ */
+	/* unsigned char keycode = io_read(KBC_DATA_ADDR); */
+	/* if (keycode & KBC_DATA_BIT_IS_BRAKE) */
+	/* 	return; */
+
+	/* /\* エコーバック処理 *\/ */
+	/* char c = keymap[keycode]; */
+	/* if (('a' <= c) && (c <= 'z')) */
+	/* 	c = c - 'a' + 'A'; */
+	/* else if (c == '\n') */
+	/* 	putc('\r'); */
+	/* putc(c); */
+
+	/* PICへ割り込み処理終了を通知(EOI) */
+	/* set_pic_eoi(KBC_INTR_NO); */
+	io_write(0x0020, 0x61);
+}
+
+void kbc_init(void)
+{
+	set_intr_desc(KBC_INTR_NO, kbc_handler);
+	enable_pic_intr(KBC_INTR_NO);
 }

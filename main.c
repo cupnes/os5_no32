@@ -18,10 +18,7 @@ void start_kernel(void *_t __attribute__ ((unused)), struct framebuffer *fb)
 
 	/* 周辺ICの初期化 */
 	pic_init();
-	set_intr_desc(INTR_NUM_KB, keyboard_handler);
-	unsigned char mask = intr_get_mask_master();
-	mask &= ~INTR_MASK_BIT_KB;
-	intr_set_mask_master(mask);
+	kbc_init();
 
 	/* CPUの割り込み有効化 */
 	enable_cpu_intr();

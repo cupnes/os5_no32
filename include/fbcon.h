@@ -3,6 +3,5 @@
 
 void putc(char c);
 void puts(char *s);
-char getc(void);
 
 #endif

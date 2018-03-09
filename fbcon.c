@@ -47,8 +47,3 @@ void puts(char *s)
 	while (*s != '\0')
 		putc(*s++);
 }
-
-char getc(void)
-{
-	return keymap[get_keycode_pressed()];
-}
