@@ -5,7 +5,7 @@
 #include <kbc.h>
 
 int kern_init(struct EFI_SYSTEM_TABLE *st __attribute__ ((unused)),
-	      struct fb *_fb)
+	      struct framebuffer *_fb)
 {
 	fb_init(_fb);
 	set_fg(255, 255, 255);
