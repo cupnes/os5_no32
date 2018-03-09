@@ -1,6 +1,5 @@
 #include <x86.h>
 #include <intr.h>
-#include <io_port.h>
 
 #define MAX_IDT	256
 
@@ -34,36 +33,36 @@ void intr_init(void)
 	__asm__ ("lidt idtr");
 
 	/* マスタPICの初期化 */
-	outb(0x11, IOADR_MPIC_ICW1);
-	outb(0x20, IOADR_MPIC_ICW2);
-	outb(0x04, IOADR_MPIC_ICW3);
-	outb(0x01, IOADR_MPIC_ICW4);
-	outb(0xff, IOADR_MPIC_OCW1);
+	io_write(IOADR_MPIC_ICW1, 0x11);
+	io_write(IOADR_MPIC_ICW2, 0x20);
+	io_write(IOADR_MPIC_ICW3, 0x04);
+	io_write(IOADR_MPIC_ICW4, 0x01);
+	io_write(IOADR_MPIC_OCW1, 0xff);
 
 	/* スレーブPICの初期化 */
-	outb(0x11, IOADR_SPIC_ICW1);
-	outb(0x28, IOADR_SPIC_ICW2);
-	outb(0x02, IOADR_SPIC_ICW3);
-	outb(0x01, IOADR_SPIC_ICW4);
-	outb(0xff, IOADR_SPIC_OCW1);
+	io_write(IOADR_SPIC_ICW1, 0x11);
+	io_write(IOADR_SPIC_ICW2, 0x28);
+	io_write(IOADR_SPIC_ICW3, 0x02);
+	io_write(IOADR_SPIC_ICW4, 0x01);
+	io_write(IOADR_SPIC_OCW1, 0xff);
 }
 
 void intr_set_mask_master(unsigned char mask)
 {
-	outb(mask, IOADR_MPIC_OCW1);
+	io_write(IOADR_MPIC_OCW1, mask);
 }
 
 unsigned char intr_get_mask_master(void)
 {
-	return inb(IOADR_MPIC_OCW1);
+	return io_read(IOADR_MPIC_OCW1);
 }
 
 void intr_set_mask_slave(unsigned char mask)
 {
-	outb(mask, IOADR_SPIC_OCW1);
+	io_write(IOADR_SPIC_OCW1, mask);
 }
 
 unsigned char intr_get_mask_slave(void)
 {
-	return inb(IOADR_SPIC_OCW1);
+	return io_read(IOADR_SPIC_OCW1);
 }

@@ -1,4 +1,4 @@
-#include <io_port.h>
+#include <x86.h>
 #include <intr.h>
 #include <kbc.h>
 #include <fbcon.h>
@@ -25,9 +25,9 @@ const char keymap[] = {
 void do_ir_keyboard(void)
 {
 	unsigned char status;
-	status = inb(IOADR_KBC_STATUS);
+	status = io_read(IOADR_KBC_STATUS);
 	if (status & IOADR_KBC_STATUS_BIT_OBF) {
-		unsigned char keycode = inb(IOADR_KBC_DATA);
+		unsigned char keycode = io_read(IOADR_KBC_DATA);
 		if (!(keycode & IOADR_KBC_DATA_BIT_BRAKE)) {
 			char c = keymap[keycode];
 			if (('a' <= c) && (c <= 'z'))
@@ -37,14 +37,13 @@ void do_ir_keyboard(void)
 			putc(c);
 		}
 	}
-	outb(IOADR_MPIC_OCW2_BIT_MANUAL_EOI | INTR_IR_KB,
-	     IOADR_MPIC_OCW2);
+	io_write(IOADR_MPIC_OCW2, IOADR_MPIC_OCW2_BIT_MANUAL_EOI | INTR_IR_KB);
 }
 
 unsigned char get_keydata_noir(void)
 {
-	while (!(inb(IOADR_KBC_STATUS) & IOADR_KBC_STATUS_BIT_OBF));
-	return inb(IOADR_KBC_DATA);
+	while (!(io_read(IOADR_KBC_STATUS) & IOADR_KBC_STATUS_BIT_OBF));
+	return io_read(IOADR_KBC_DATA);
 }
 
 unsigned char get_keycode_pressed(void)
