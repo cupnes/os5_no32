@@ -17,8 +17,8 @@ void start_kernel(void *_t __attribute__ ((unused)), struct framebuffer *fb)
 	unsigned char mask = intr_get_mask_master();
 	mask &= ~INTR_MASK_BIT_KB;
 	intr_set_mask_master(mask);
-	sti();
+	enable_cpu_intr();
 
 	while (1)
-		x86_halt();
+		cpu_halt();
 }
