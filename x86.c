@@ -1,4 +1,4 @@
-#include <cpu.h>
+#include <x86.h>
 
 unsigned long long gdtr[2];
 

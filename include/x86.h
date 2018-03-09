@@ -1,5 +1,5 @@
-#ifndef _CPU_H_
-#define _CPU_H_
+#ifndef _X86_H_
+#define _X86_H_
 
 #define X86_EFLAGS_IF	0x00000200
 #define GDT_KERN_DS_OFS	0x0010
@@ -83,4 +83,4 @@ struct tss {
 
 void gdt_init(void);
 
-#endif /* _CPU_H_ */
+#endif /* _X86_H_ */

@@ -1,4 +1,4 @@
-#include <cpu.h>
+#include <x86.h>
 #include <intr.h>
 #include <fb.h>
 #include <kbc.h>

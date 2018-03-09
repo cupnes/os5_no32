@@ -1,4 +1,4 @@
-#include <cpu.h>
+#include <x86.h>
 #include <intr.h>
 #include <io_port.h>
 
