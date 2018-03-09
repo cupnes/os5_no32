@@ -1,13 +1,11 @@
 #include <cpu.h>
 #include <intr.h>
-#include <efi.h>
 #include <fb.h>
 #include <kbc.h>
 
-int kern_init(struct EFI_SYSTEM_TABLE *st __attribute__ ((unused)),
-	      struct framebuffer *_fb)
+void start_kernel(void *_t __attribute__ ((unused)), struct framebuffer *fb)
 {
-	fb_init(_fb);
+	fb_init(fb);
 	set_fg(255, 255, 255);
 	set_bg(0, 70, 250);
 	clear_screen();
@@ -23,6 +21,4 @@ int kern_init(struct EFI_SYSTEM_TABLE *st __attribute__ ((unused)),
 
 	while (1)
 		x86_halt();
-
-	return 0;
 }
